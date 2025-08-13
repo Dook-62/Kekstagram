@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="nouislider/nouislider.css">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
@@ -46,7 +47,7 @@
                   <!-- Изменение размера изображения -->
                   <fieldset class="img-upload__scale  scale">
                     <button type="button" class="scale__control  scale__control--smaller">Уменьшить</button>
-                    <input type="text" class="scale__control  scale__control--value" value="55%" title="Image Scale" name="scale" readonly>
+                    <input type="text" class="scale__control  scale__control--value" value="100%" title="Image Scale" name="scale" readonly>
                     <button type="button" class="scale__control  scale__control--bigger">Увеличить</button>
                   </fieldset>
 
@@ -115,12 +116,17 @@
 
                 <!-- Добавление хэш-тегов и комментария к изображению -->
                 <fieldset class="img-upload__text text">
-                  <input class="text__hashtags" name="hashtags" placeholder="#ХэшТег">
-                  <textarea class="text__description" name="description" placeholder="Ваш комментарий..."></textarea>
+                  <div class="img-upload__element">
+                    <input class="text__hashtags" name="hashtags" placeholder="#ХэшТег">
+                  </div>
+                  <div class="img-upload__element">
+                    <textarea class="text__description" name="description" placeholder="Ваш комментарий..." maxlength="140"
+                  data-pristine-maxlength-message="Комментарий не может быть длиннее 140 символов"></textarea>
+                  </div>
                 </fieldset>
 
                 <!-- Кнопка для отправки данных на сервер -->
-                <button type="submit" class="img-upload__submit" id="upload-submit" action="https://25.javascript.htmlacademy.pro/kekstagram"№ method="post">Опубликовать</button>
+                <button type="submit" class="img-upload__submit" id="upload-submit">Опубликовать</button>
               </div>
             </div>
           </form>
@@ -230,7 +236,8 @@
     <div class="img-upload__message  img-upload__message--loading">Загружаем...</div>
   </template>
 
- <script src="pristine/pristine.min.js"></script>
- <script src="/js/main.js" type="module"></script>
+  <script src="pristine/pristine.min.js"></script>
+  <script src="nouislider/nouislider.js"></script>
+  <script src="js/main.js" type="module"></script>
 </body>
 </html>

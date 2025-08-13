@@ -1,11 +1,14 @@
-const bigPicture = document.querySelector('.big-picture'); //элемент для полноэкранного отображения изображения
-const commentCount = document.querySelector('.social__comment-count'); //Элемент счетчика комментариев
-const commentList = document.querySelector('.social__comments'); //Блок, куда вставляются комментарии
-const commentsLoader = document.querySelector('.comments-loader'); //Блок загрузки новых комментариев
-const body = document.querySelector('body'); //Присвоили тег body
-const cancelButton = document.querySelector('.big-picture__cancel'); //Кнопка закрытия режима полноэкранного просмотра
+const bigPicture = document.querySelector('.big-picture');
+const commentCount = document.querySelector('.social__comment-count');
+const commentList = document.querySelector('.social__comments');
+const commentsLoader = document.querySelector('.comments-loader');
+const body = document.querySelector('body');
+const cancelButton = document.querySelector('.big-picture__cancel');
 
-//Функции для создания комментария и наполнения его данными
+const COMMENTS_PER_PORTION = 5;
+let commentsShown = 0;
+let comments = [];
+
 const createComment = ({ avatar, name, message }) => {
   const comment = document.createElement('li');
   comment.innerHTML =
@@ -19,27 +22,34 @@ const createComment = ({ avatar, name, message }) => {
   return comment;
 };
 
-//Функция для добавления комментариев в блок
-const renderComments = (comments) => {
-  commentList.innerHTML = '';
+const renderComments = () => {
+  commentsShown += COMMENTS_PER_PORTION;
+
+  if (commentsShown >= comments.length) {
+    commentsLoader.classList.add('hidden');
+    commentsShown = comments.length;
+  } else {
+    commentsLoader.classList.remove('hidden');
+  }
 
   const fragment = document.createDocumentFragment();
-  comments.forEach((comment) => {
-    const commentElement = createComment(comment);
+  for (let i = 0; i < commentsShown; i++) {
+    const commentElement = createComment(comments[i]);
     fragment.append(commentElement);
-  });
+  }
 
+  commentList.innerHTML = '';
   commentList.append(fragment);
+  commentCount.innerHTML = `${commentsShown} из <span class="comments-count">${comments.length}</span> комментариев`;
 };
 
-//Функция, закрывающая полноэкранный режим
 const hideBigPicture = () => {
   bigPicture.classList.add('hidden');
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onEscKeyDown);
+  commentsShown = 0;
 };
 
-//Функция-обработчик, отлавливающая нажатие ESC
 function onEscKeyDown(evt) {
   if (evt.key === 'Escape') {
     evt.preventDefault();
@@ -47,12 +57,12 @@ function onEscKeyDown(evt) {
   }
 }
 
-//Функция-обработчик, для нажатия кнопки "закрыть"
 const onCancelButtonClick = () => {
   hideBigPicture();
 };
 
-//Функция, отображающая детали изображения
+const onCommentsLoaderClick = () => renderComments();
+
 const renderPictureDetails = ({ url, likes, description }) => {
   bigPicture.querySelector('.big-picture__img img').src = url;
   bigPicture.querySelector('.big-picture__img img').alt = description;
@@ -60,19 +70,20 @@ const renderPictureDetails = ({ url, likes, description }) => {
   bigPicture.querySelector('.social__caption').textContent = description;
 };
 
-//Функция для показа полноэкранного режима
 const showBigPicture = (data) => {
   bigPicture.classList.remove('hidden');
   body.classList.add('modal-open');
   commentsLoader.classList.add('hidden');
-  commentCount.classList.add('hidden');
   document.addEventListener('keydown', onEscKeyDown);
 
   renderPictureDetails(data);
-  renderComments(data.comments);
+  comments = data.comments;
+  if (comments.length > 0) {
+    renderComments();
+  }
 };
 
 cancelButton.addEventListener('click', onCancelButtonClick);
+commentsLoader.addEventListener('click', onCommentsLoaderClick);
 
-export {showBigPicture};
-
+export { showBigPicture };

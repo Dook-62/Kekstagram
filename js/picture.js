@@ -22,13 +22,14 @@ const createPicture = (data) => {
 };
 
 const renderPictures = (pictures) => {
-  const fragment = document.createDocumentFragment(); //Создаем "черный ящик" в DOM
-  pictures.forEach((picture) => { //метод forEach применяет функцию к каждому объекту в массиве
+  container.querySelectorAll('.picture').forEach((element) => element.remove());
+  const fragment = document.createDocumentFragment();
+  pictures.forEach((picture) => {
     const pictureElement = createPicture(picture);
-    fragment.append(pictureElement); //Добавляем во фрагмент объект, заполненный данными
+    fragment.append(pictureElement);
   });
 
-  container.append(fragment); //Добавляем наш "черный ящик" в контейнер
+  container.append(fragment);
 };
 
 export { renderPictures };
